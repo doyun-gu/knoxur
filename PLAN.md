@@ -10,37 +10,38 @@ A personal portfolio tracker that consolidates holdings across 3 brokerage accou
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────┐
-│                   Browser                        │
-│         React + Recharts + TanStack Table        │
-└──────────────────────┬──────────────────────────┘
-                       │ HTTP (localhost:3004)
-┌──────────────────────┴──────────────────────────┐
-│                 FastAPI Backend                   │
-│  ┌────────────┐ ┌───────────┐ ┌──────────────┐  │
-│  │ Accounts   │ │ Holdings  │ │ Portfolio    │  │
-│  │ Router     │ │ Router    │ │ Router       │  │
-│  └─────┬──────┘ └─────┬─────┘ └──────┬───────┘  │
-│        │              │              │           │
-│  ┌─────┴──────────────┴──────────────┴───────┐   │
-│  │           Service Layer                    │   │
-│  │  price_fetcher.py  │  fx_rates.py         │   │
-│  │  portfolio.py      │  valuations.py       │   │
-│  └────────────────────┬──────────────────────┘   │
-│                       │                          │
-│  ┌────────────────────┴──────────────────────┐   │
-│  │              SQLite (knoxur.db)            │   │
-│  │  accounts │ holdings │ transactions       │   │
-│  │  price_history │ fx_rates │ snapshots     │   │
-│  └───────────────────────────────────────────┘   │
-└──────────────────────────────────────────────────┘
-         ▲
-         │ cron (every 15 min)
-┌────────┴─────────┐
-│  yfinance API    │
-│  (Yahoo Finance) │
-└──────────────────┘
+```mermaid
+graph TD
+    Browser["Browser<br/>React + Recharts + TanStack Table"]
+    Browser -->|"HTTP (localhost:3004)"| FastAPI
+
+    subgraph FastAPI["FastAPI Backend"]
+        direction TB
+        subgraph Routers
+            R1["Accounts Router"]
+            R2["Holdings Router"]
+            R3["Portfolio Router"]
+        end
+        subgraph Services["Service Layer"]
+            S1["price_fetcher.py"]
+            S2["fx_rates.py"]
+            S3["portfolio.py"]
+            S4["valuations.py"]
+        end
+        subgraph DB["SQLite (knoxur.db)"]
+            T1["accounts"]
+            T2["holdings"]
+            T3["transactions"]
+            T4["price_history"]
+            T5["fx_rates"]
+            T6["snapshots"]
+        end
+        Routers --> Services
+        Services --> DB
+    end
+
+    yfinance["yfinance API<br/>(Yahoo Finance)"]
+    yfinance -->|"cron (every 15 min)"| Services
 ```
 
 ---
