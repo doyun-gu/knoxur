@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -8,8 +10,8 @@ from schemas import HoldingCreate, HoldingUpdate, HoldingOut
 router = APIRouter(prefix="/api/holdings", tags=["holdings"])
 
 
-@router.get("/", response_model=list[HoldingOut])
-def list_holdings(account_id: int | None = None, db: Session = Depends(get_db)):
+@router.get("/", response_model=List[HoldingOut])
+def list_holdings(account_id: Optional[int] = None, db: Session = Depends(get_db)):
     query = db.query(Holding)
     if account_id is not None:
         query = query.filter(Holding.account_id == account_id)

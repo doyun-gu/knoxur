@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from db import init_db
-from routers import accounts, holdings, transactions
+from routers import accounts, holdings, transactions, portfolio
 
 app = FastAPI(title="Knoxur", version="0.1.0")
 
@@ -22,6 +22,7 @@ app.add_middleware(
 app.include_router(accounts.router)
 app.include_router(holdings.router)
 app.include_router(transactions.router)
+app.include_router(portfolio.router)
 
 
 @app.on_event("startup")
