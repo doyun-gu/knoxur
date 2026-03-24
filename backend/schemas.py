@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from datetime import date, datetime
 
@@ -32,8 +34,8 @@ class HoldingCreate(BaseModel):
 
 
 class HoldingUpdate(BaseModel):
-    quantity: float | None = None
-    avg_cost: float | None = None
+    quantity: Optional[float] = None
+    avg_cost: Optional[float] = None
 
 
 class HoldingOut(BaseModel):
@@ -57,7 +59,7 @@ class TransactionCreate(BaseModel):
     quantity: float
     price_per_share: float
     date: date
-    notes: str | None = None
+    notes: Optional[str] = None
 
 
 class TransactionOut(BaseModel):
@@ -68,6 +70,6 @@ class TransactionOut(BaseModel):
     quantity: float
     price_per_share: float
     date: date
-    notes: str | None
+    notes: Optional[str]
 
     model_config = {"from_attributes": True}

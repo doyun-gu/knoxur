@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -8,10 +10,10 @@ from schemas import TransactionCreate, TransactionOut
 router = APIRouter(prefix="/api/transactions", tags=["transactions"])
 
 
-@router.get("/", response_model=list[TransactionOut])
+@router.get("/", response_model=List[TransactionOut])
 def list_transactions(
-    account_id: int | None = None,
-    ticker: str | None = None,
+    account_id: Optional[int] = None,
+    ticker: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     query = db.query(Transaction)

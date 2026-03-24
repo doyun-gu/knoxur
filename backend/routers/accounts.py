@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -8,7 +10,7 @@ from schemas import AccountCreate, AccountOut
 router = APIRouter(prefix="/api/accounts", tags=["accounts"])
 
 
-@router.get("/", response_model=list[AccountOut])
+@router.get("/", response_model=List[AccountOut])
 def list_accounts(db: Session = Depends(get_db)):
     return db.query(Account).all()
 
